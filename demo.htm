@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <link rel="import" href="/bower_components/polymer/polymer.html" />
+        <link rel="import" href="/bower_components/iron-elements/iron-elements.html" />
+        <link rel="import" href="/bower_components/paper-elements/paper-elements.html" />
+    </head>
+    <body>
+        <dom-module id="my-app">
+            <template>
+                <iron-pages selected="{{selected}}">
+                    <section>A</section>
+                    <section>B</section>
+                    <section>C</section>
+                </iron-pages>
+                <paper-menu selected="{{selected}}">
+                    <paper-item>A</paper-item>
+                    <paper-item>B</paper-item>
+                    <paper-item>C</paper-item>
+                </paper-menu>
+            </template>
+            <script>
+            Polymer({
+            is:'my-app',
+            })
+            </script>
+        </dom-module>
+<my-app></my-app>
+    </body>
+</html>

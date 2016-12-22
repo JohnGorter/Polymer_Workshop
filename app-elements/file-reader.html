@@ -1,0 +1,32 @@
+<dom-module id="file-reader">
+    <template>
+    </template>
+    <script>
+    Polymer({
+      is:'file-reader',
+      properties:{
+          file:{
+              type:String,
+              observer:'_fileChanged'
+          },
+          data:{ notify:true, },
+          readAs:{ type:String, value:'dataUrl'  }
+      },
+      _fileChanged:function(){
+          this.data = '';
+          if (this.file && this.file.name){
+                console.log(`file has changed.....`);
+                var reader = new FileReader();
+                reader.onload = function(event){
+                    this.data = event.target.result;
+                }.bind(this); 
+                
+                switch(this.readAs){
+                    case 'dataUrl': { reader.readAsDataURL(this.file); break;}
+                    case 'text': { reader.readAsText(this.file); break;}
+                }
+          }
+      }
+    })
+    </script>
+</dom-module>

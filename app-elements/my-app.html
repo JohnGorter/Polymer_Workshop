@@ -1,0 +1,88 @@
+<link rel="import" href="/bower_components/polymer/polymer.html" />
+<link rel="import" href="/app-elements/photo-viewer.html" />
+<link rel="import" href="/app-elements/photo-list.html" />
+<link rel="import" href="/app-elements/photo-upload.html" />
+<link rel="import" href="/bower_components/paper-elements/paper-elements.html" />
+<link rel="import" href="/bower_components/iron-elements/iron-elements.html" />
+<link rel="import" href="/bower_components/google-signin/google-signin.html" />
+
+
+<dom-module id="my-app">
+    <template>
+        <style>
+        paper-fab { position:fixed;right:25px;bottom:25px}
+        </style>
+
+        <paper-header-panel>
+            <paper-toolbar><div class="flex">hello {{title}}</div><google-signin  on-google-signin-aware-success="handleSignIn" client-id="814314004693-ehiih9s95i73a75qof8tadna7ognd4vl.apps.googleusercontent.com"></google-signin></paper-toolbar>
+            <div>
+                <photo-list id="list" photos="[[arrPictures]]" on-photo-selected="selectPhoto"></photo-list>
+                <paper-fab icon="add" on-tap="showAddDialog"></paper-fab>
+            </div>
+        </paper-header-panel>
+
+        <paper-dialog id="addDialog" modal>
+            <h3>Add a new picture</h3>
+            <photo-upload photo="{{newPhoto}}"></photo-upload>
+            <div class="buttons">
+                <paper-button dialog-dismiss>Close</paper-button>
+                <paper-button disabled$="{{!_isEnabled(newPhoto)}}" dialog-dismiss on-tap="addPhoto">Save</paper-button>
+            </div>
+        </paper-dialog>
+
+        <paper-dialog id="showDialog" modal>
+            <h3>{{selectedPhoto.title}}</h3>
+            <photo-viewer photo="[[selectedPhoto]]">Photo viewer is missing...</photo-viewer>
+            <div class="buttons">
+                <paper-button dialog-dismiss>Close</paper-button>
+            </div>
+        </paper-dialog>
+
+        <!-- <iron-localstorage name="babes" value="{{arrPictures}}" on-iron-localstorage-load-empty="setDefault" ></iron-localstorage> -->
+
+        <iron-ajax id="getBabe" auto url="/data/babes" handle-as="json" last-response="{{arrPictures}}"></iron-ajax>
+        <iron-ajax id="postBabe" method="POST"  body="{{newPhoto}}" url="/data/babe" content-type="application/json"></iron-ajax>
+
+
+    </template>
+    <script>
+    Polymer({
+        is:'my-app',
+        properties:{
+            title:{ type:String },
+            arrPictures:{
+                type:Array
+            }
+        },
+        handleSignIn: function(){
+            alert(gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getName());
+        },
+        ready: function(){
+            this.newPhoto = {};
+        },
+        setDefault: function(){
+            this.arrPictures = [];
+        },
+        _isEnabled: function(){
+            return this.newPhoto && this.newPhoto.title;
+        },
+        selectPhoto: function(){
+            this.selectedPhoto = event.detail.photo;
+            this.$.showDialog.open();
+        },
+        cancel: function(){
+            this.newPhoto = {};
+        },
+        addPhoto: function(){
+           // this.push('arrPictures', this.newPhoto);
+            this.$.postBabe.generateRequest();
+            this.$.getBabe.generateRequest();
+            this.$.list.resize();
+            this.set('newPhoto',{});
+        },
+        showAddDialog:function(){
+            this.$.addDialog.open();
+        }
+    })
+    </script>
+</dom-module>

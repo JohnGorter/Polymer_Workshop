@@ -1,0 +1,24 @@
+<dom-module id="photo-list">
+    <template>
+       <iron-list id="list" grid items="[[photos]]">
+            <template>
+                <div style="padding:15px">
+                <iron-image class="thumbnail" style="width:50px;height:50px" sizing="contain" src="{{item.photo}}" on-tap="select"></iron-image>
+               </div>
+            </template>
+        </iron-list>
+    </template>
+    <script>
+    Polymer({
+      is:'photo-list',
+      select:function(event){
+            this.fire('photo-selected', 
+                {photo:event.model.item}
+            );
+      },
+      resize:function(){
+          this.$.list.fire("iron-resize");
+      }
+    })
+    </script>
+</dom-module>

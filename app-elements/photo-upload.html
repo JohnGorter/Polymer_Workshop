@@ -1,0 +1,35 @@
+<link rel="import" href="/app-elements/file-reader.html" />
+
+<dom-module id="photo-upload">
+    <template>
+        <div on-drop="_drop" on-dragover="_drag">drop your photo here</div>
+        <file-reader file="{{file}}" read-as="dataUrl" data="{{data}}"></file-reader>
+    </template>
+    <script>
+    Polymer({
+      is:'photo-upload',
+      properties:{
+          photo:{  
+              type:Object, 
+              notify:true  }
+      },
+      observers:[
+          '_changePhoto(data)'
+      ],
+      _changePhoto: function(data){
+          this.photo= { title:this.file.name, photo:this.data};
+      },
+      _drop: function(e){
+          console.log(`dropping`, e.dataTransfer.files[0]);
+          this.set('file',e.dataTransfer.files[0]);
+          event.preventDefault(); 
+          event.stopPropagation();
+      },
+      _drag: function() {
+          console.log(`dragging`);
+          event.preventDefault();
+          event.stopPropagation();
+      }
+    })
+    </script>
+</dom-module>
