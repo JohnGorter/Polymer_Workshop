@@ -19,5 +19,5 @@ app.get('/data/babes', function(req, res){
     res.end(JSON.stringify(arrBabes));
 }); 
 
-app.listen(1337, function(){ console.log('babe serving...');})
+app.listen(Process.ENV.PORT || 1337, function(){ console.log('babe serving...');})
 
